@@ -1,11 +1,14 @@
+'use strict'
 var random = {
     num :function(min, max){
-        return Math.floor(Math.random() * (max - min)) + min;
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
     },
     numBetween1and100: function(){
         const min = 1;
         const max = 100;
-        return Math.floor(Math.random() * (max - min)) + min;
+        return this.num(min, max);
     },
     fromArray: function(array) {
         const min = 0;
@@ -47,29 +50,31 @@ var random = {
         let temp = this.num(-30, 130);
         return { weather: weather, temp: temp};
         },
-    coinflip: function(){
-        var flip = this.num(0,1);
-        console.log(flip);
-        var coin="";
-        if(flip === 1){
-            coin = "heads";
+    coinflip: function(flipCount){
+        if(flipCount){
+            var flips = []
+            for (var i = 0; i < flipCount; i++) {
+                flips.push(this.num(0,1) ? "heads" : "tails");
+            }
+            var heads = flips
+                .filter(flip => flip==="heads")
+                .length;
+            var tails = flips
+                .filter(flip => flip==="tails")
+                .length;
+                var obj = {
+                    heads: heads,
+                    tails: tails,
+                    flips: flips
+                }
+            return obj;
         }
         else{
-            coin = "tails";
+            return this.num(0,1) ? "heads" : "tails";
         }
-        return coin;
-        }
+    },
+    day: function(day){
+        return this.fromArray(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
     }
 
-
-
-// var dictionary = ['word1', 'word2'];
-
-
-// var people = ['Ben', 'Michelle', 'Justin', 'Jake'];
-
-// console.log(random.person(people));
-
-
-// console.log(random.fromArray(dictionary));
-console.log(random.coinflip());
+}
